@@ -1,20 +1,9 @@
 "use client";
 import { useState, useRef } from "react";
-import { Mail, HeartPulse, Twitter, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 import { supabase } from "@/lib/supabase";
 
-const contactInfo = [
-    { icon: Mail, text: "hello@akarilabs.io", href: "mailto:hello@akarilabs.io" },
-    {
-        icon: HeartPulse,
-        text: "support@pmhnphiring.com",
-        href: "mailto:support@pmhnphiring.com",
-    },
-    { icon: Twitter, text: "@pmhnphiring", href: "https://x.com/pmhnphiring" },
-    { icon: MapPin, text: "Sheridan, Wyoming, USA", href: null },
-];
 
 // Paper crane SVG path for the send animation
 function PaperCrane({ className }: { className?: string }) {
@@ -128,7 +117,7 @@ export default function Contact() {
                     </p>
                 </ScrollReveal>
 
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-[3fr_2fr]">
+                <div className="mx-auto max-w-[650px]">
                     {/* Contact Form with Paper Crane Animation */}
                     <ScrollReveal>
                         <div className="relative overflow-hidden rounded-[20px] border border-border-dark bg-surface-dark p-8 shadow-sm">
@@ -303,44 +292,6 @@ export default function Contact() {
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                        </div>
-                    </ScrollReveal>
-
-                    {/* Contact Info */}
-                    <ScrollReveal delay={0.15}>
-                        <div className="flex flex-col gap-5">
-                            {contactInfo.map((item, i) => {
-                                const Inner = (
-                                    <div
-                                        key={i}
-                                        className="group flex items-center gap-3 transition-colors duration-200"
-                                    >
-                                        <item.icon
-                                            size={20}
-                                            className="shrink-0 text-amber transition-all duration-200 group-hover:drop-shadow-[0_0_6px_rgba(245,166,35,0.4)]"
-                                        />
-                                        <span
-                                            className="text-[15px] text-text-muted-blue transition-colors duration-200 group-hover:text-text-cream"
-                                            style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                        >
-                                            {item.text}
-                                        </span>
-                                    </div>
-                                );
-                                if (item.href) {
-                                    return (
-                                        <a
-                                            key={i}
-                                            href={item.href}
-                                            target={item.href.startsWith("http") ? "_blank" : undefined}
-                                            rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                                        >
-                                            {Inner}
-                                        </a>
-                                    );
-                                }
-                                return <div key={i}>{Inner}</div>;
-                            })}
                         </div>
                     </ScrollReveal>
                 </div>

@@ -23,10 +23,7 @@ const team = [
         role: "Business Operations",
         bio: "Manages banking, payments, partnerships, and growth. Runs all company and product social accounts. Keeps the lights on.",
         stack: "",
-        socials: [
-            { icon: Twitter, href: "https://x.com/AkariLabs" },
-            { icon: Linkedin, href: "https://linkedin.com/company/akari-labs" },
-        ],
+        socials: [],
     },
 ];
 
