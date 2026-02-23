@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Fonts */
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-kanji: "Noto Serif JP", serif;
+
+  /* Dark end */
+  --color-bg-dark: #1A1F2E;
+  --color-surface-dark: #232838;
+  --color-surface-dark-hover: #2A3040;
+  --color-border-dark: #2E3446;
+
+  /* Light end */
+  --color-bg-light: #F5F0E8;
+  --color-surface-light: #FFFFFF;
+  --color-surface-light-hover: #EDE8DF;
+  --color-border-light: #D6CFBF;
+
+  /* Brand amber */
+  --color-amber: #F5A623;
+  --color-amber-bright: #FFB84D;
+
+  /* Product accents */
+  --color-sage: #7BC67E;
+  --color-coral: #FF6B6B;
+
+  /* Text on dark */
+  --color-text-cream: #F0EDE6;
+  --color-text-muted-blue: #D0D8E8;
+  --color-text-dim: #6B7280;
+
+  /* Text on light */
+  --color-text-dark: #1A1A1A;
+  --color-text-dark-secondary: #4A5568;
+  --color-text-dark-muted: #7A8A7E;
+}
+
+
+/* Base */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+body {
+  background: #1A1F2E;
+  color: #F0EDE6;
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.4);
+    opacity: 0.5;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient divider */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 166, 35, 0.2), transparent);
+}
