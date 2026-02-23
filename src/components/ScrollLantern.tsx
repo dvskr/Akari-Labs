@@ -71,7 +71,7 @@ export default function ScrollLantern() {
             onClick={handleTrackClick}
         >
             {/* Track line */}
-            <div className="absolute left-1/2 top-[60px] h-[calc(100%-120px)] w-[2px] -translate-x-1/2">
+            <div className="absolute left-1/2 top-[100px] h-[calc(100%-160px)] w-[2px] -translate-x-1/2">
                 {/* Background line */}
                 <div className="h-full w-full rounded-full bg-amber/10" />
                 {/* Scrolled portion glow */}

@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   icons: {
-    icon: "/lantern-icon.jpg",
-    apple: "/lantern-icon.jpg",
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
   alternates: {
     canonical: "https://akarilabs.io",

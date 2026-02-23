@@ -1,5 +1,5 @@
 "use client";
-import { Twitter, Linkedin } from "lucide-react";
+import { Twitter, Linkedin, Github } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import ScrollReveal from "./ScrollReveal";
 import { STORAGE_URL } from "@/lib/storage";
@@ -8,10 +8,14 @@ const team = [
     {
         video: `${STORAGE_URL}/team/sathish.mp4`,
         name: "Sathish",
-        role: "Creator & Product",
+        role: "Creator",
         bio: "Designs, codes, and ships all products. Data Engineer by day, product builder by night.",
         stack: "Next.js · TypeScript · Supabase · Cursor · Claude AI",
-        socials: [{ icon: Twitter, href: "https://x.com/sathish_daggula" }],
+        socials: [
+            { icon: Github, href: "https://github.com/dvskr" },
+            { icon: Linkedin, href: "https://linkedin.com/in/dvskr" },
+            { icon: Twitter, href: "https://twitter.com/Sathish_Daggula" },
+        ],
     },
     {
         video: `${STORAGE_URL}/team/pavan.mp4`,

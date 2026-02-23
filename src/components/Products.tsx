@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { Twitter, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { STORAGE_URL } from "@/lib/storage";
 import CountUp from "./CountUp";
@@ -98,6 +99,25 @@ function PMHNPHiring() {
                 >
                     Explore Jobs →
                 </a>
+
+                {/* Social icons */}
+                <div className="mt-5 flex gap-3">
+                    <a href="https://x.com/pmhnphiring" target="_blank" rel="noopener noreferrer" className="text-text-dim transition-colors duration-200 hover:text-sage">
+                        <Twitter size={18} />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61586136316931" target="_blank" rel="noopener noreferrer" className="text-text-dim transition-colors duration-200 hover:text-sage">
+                        <Facebook size={18} />
+                    </a>
+                    <a href="https://www.instagram.com/pmhnphiring" target="_blank" rel="noopener noreferrer" className="text-text-dim transition-colors duration-200 hover:text-sage">
+                        <Instagram size={18} />
+                    </a>
+                    <a href="https://www.linkedin.com/company/pmhnp-hiring" target="_blank" rel="noopener noreferrer" className="text-text-dim transition-colors duration-200 hover:text-sage">
+                        <Linkedin size={18} />
+                    </a>
+                    <a href="https://www.youtube.com/@pmhnphiring" target="_blank" rel="noopener noreferrer" className="text-text-dim transition-colors duration-200 hover:text-sage">
+                        <Youtube size={18} />
+                    </a>
+                </div>
             </ScrollReveal>
         </div>
     );
