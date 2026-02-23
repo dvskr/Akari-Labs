@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { Mail, HeartPulse, Twitter, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
+import { supabase } from "@/lib/supabase";
 
 const contactInfo = [
     { icon: Mail, text: "hello@akarilabs.io", href: "mailto:hello@akarilabs.io" },
@@ -53,32 +54,55 @@ function PaperCrane({ className }: { className?: string }) {
 }
 
 export default function Contact() {
-    const [sendState, setSendState] = useState<"idle" | "folding" | "flying" | "success">("idle");
+    const [sendState, setSendState] = useState<"idle" | "folding" | "flying" | "success" | "error">("idle");
     const formRef = useRef<HTMLFormElement>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formRef.current) return;
+
+        const formData = new FormData(formRef.current);
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const subject = formData.get("subject") as string;
+        const message = formData.get("message") as string;
 
         // Start animation sequence
         setSendState("folding");
-
-        // After fold, fly crane
         setTimeout(() => setSendState("flying"), 500);
 
-        // After fly, show success
-        setTimeout(() => {
+        try {
+            // Insert into Supabase
+            const { error } = await supabase.from("messages").insert({ name, email, subject, message });
+            if (error) throw error;
+
+            // Send Discord webhook notification
+            try {
+                const webhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK;
+                if (webhookUrl) {
+                    await fetch(webhookUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: `📩 New message: ${subject}`,
+                                color: 0xF5A623,
+                                fields: [
+                                    { name: "Name", value: name, inline: true },
+                                    { name: "Email", value: email, inline: true },
+                                    { name: "Message", value: message.slice(0, 1024) },
+                                ],
+                                timestamp: new Date().toISOString(),
+                            }],
+                        }),
+                    });
+                }
+            } catch { } // Webhook failure shouldn't block success
+
             setSendState("success");
-            // Actually submit form data via mailto
-            if (formRef.current) {
-                const formData = new FormData(formRef.current);
-                const name = formData.get("name");
-                const email = formData.get("email");
-                const subject = formData.get("subject");
-                const message = formData.get("message");
-                const body = `Name: ${name}%0AEmail: ${email}%0ASubject: ${subject}%0A%0A${message}`;
-                window.location.href = `mailto:hello@akarilabs.io?subject=${subject}&body=${body}`;
-            }
-        }, 1500);
+        } catch {
+            setSendState("error");
+        }
     };
 
     const resetForm = () => {

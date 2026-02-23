@@ -1,5 +1,4 @@
 "use client";
-import { Twitter, Linkedin } from "lucide-react";
 
 const footerLinks = {
     products: [
@@ -12,8 +11,6 @@ const footerLinks = {
         { label: "Contact", href: "#contact" },
     ],
     connect: [
-        { label: "Twitter", href: "https://x.com/AkariLabs", external: true },
-        { label: "LinkedIn", href: "https://linkedin.com/company/akari-labs", external: true },
         { label: "Email", href: "mailto:hello@akarilabs.io", external: false },
     ],
 };
@@ -61,24 +58,6 @@ export default function Footer() {
                     >
                         Software that lights the way.
                     </p>
-                    <div className="mt-4 flex gap-3">
-                        <a
-                            href="https://x.com/AkariLabs"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-text-dim transition-colors duration-200 hover:text-amber"
-                        >
-                            <Twitter size={20} />
-                        </a>
-                        <a
-                            href="https://linkedin.com/company/akari-labs"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-text-dim transition-colors duration-200 hover:text-amber"
-                        >
-                            <Linkedin size={20} />
-                        </a>
-                    </div>
                 </div>
 
                 {/* Products */}
