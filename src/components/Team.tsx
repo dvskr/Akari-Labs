@@ -5,7 +5,7 @@ export default function Team() {
       role: "Creator",
       bio: "Designs, codes, and ships every product. Data engineer by day, builder by night. Believes good software is a long letter, not a press release.",
       stack: "Next · TypeScript · Supabase · Cursor · Claude",
-      links: [],
+      links: [] as string[][],
       kanji: "創",
     },
     {
@@ -13,7 +13,7 @@ export default function Team() {
       role: "Operations",
       bio: "Banking, payments, partnerships, growth. Runs every social account. Keeps the lanterns lit while the studio builds.",
       stack: "Operations · Brand · Partnerships",
-      links: [],
+      links: [] as string[][],
       kanji: "運",
     },
   ];
