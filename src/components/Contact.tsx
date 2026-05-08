@@ -1,301 +1,214 @@
 "use client";
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ScrollReveal from "./ScrollReveal";
-import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 
-
-// Paper crane SVG path for the send animation
-function PaperCrane({ className }: { className?: string }) {
-    return (
-        <svg viewBox="0 0 100 100" width="60" height="60" className={className} fill="none">
-            <path
-                d="M 50 10 L 85 50 L 50 45 L 15 50 Z"
-                stroke="#F5A623"
-                strokeWidth="2"
-                fill="rgba(245,166,35,0.1)"
-            />
-            <path
-                d="M 50 45 L 85 50 L 65 75 Z"
-                stroke="#F5A623"
-                strokeWidth="2"
-                fill="rgba(245,166,35,0.05)"
-            />
-            <path
-                d="M 50 45 L 15 50 L 35 75 Z"
-                stroke="#F5A623"
-                strokeWidth="2"
-                fill="rgba(245,166,35,0.05)"
-            />
-            <path
-                d="M 50 10 L 50 45"
-                stroke="#F5A623"
-                strokeWidth="1.5"
-            />
-            <path
-                d="M 35 75 L 50 90 L 65 75"
-                stroke="#F5A623"
-                strokeWidth="2"
-                fill="rgba(245,166,35,0.08)"
-            />
-        </svg>
-    );
+function FieldLabel({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-12 items-baseline gap-4 border-b pb-4" style={{ borderColor: "var(--hairline)" }}>
+      <label className="col-span-12 text-[11px] tracking-[0.22em] uppercase md:col-span-2" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
+        {label}
+      </label>
+      <div className="col-span-12 md:col-span-10">{children}</div>
+    </div>
+  );
 }
 
 export default function Contact() {
-    const [sendState, setSendState] = useState<"idle" | "folding" | "flying" | "success" | "error">("idle");
-    const formRef = useRef<HTMLFormElement>(null);
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", subject: "General", message: "" });
+  const [letterNum, setLetterNum] = useState("0000");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!formRef.current) return;
+  useEffect(() => {
+    setLetterNum(String(Math.floor(Math.random() * 8000) + 1000));
+  }, []);
 
-        const formData = new FormData(formRef.current);
-        const name = formData.get("name") as string;
-        const email = formData.get("email") as string;
-        const subject = formData.get("subject") as string;
-        const message = formData.get("message") as string;
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setState("sending");
 
-        // Start animation sequence
-        setSendState("folding");
-        setTimeout(() => setSendState("flying"), 500);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-        try {
-            // Insert into Supabase
-            const { error } = await supabase.from("messages").insert({ name, email, subject, message });
-            if (error) throw error;
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong.");
+      }
 
-            // Send Discord webhook notification
-            try {
-                const webhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK;
-                if (webhookUrl) {
-                    await fetch(webhookUrl, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            embeds: [{
-                                title: `📩 New message: ${subject}`,
-                                color: 0xF5A623,
-                                fields: [
-                                    { name: "Name", value: name, inline: true },
-                                    { name: "Email", value: email, inline: true },
-                                    { name: "Message", value: message.slice(0, 1024) },
-                                ],
-                                timestamp: new Date().toISOString(),
-                            }],
-                        }),
-                    });
-                }
-            } catch { } // Webhook failure shouldn't block success
+      setState("sent");
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Failed to send message.");
+      setState("error");
+    }
+  };
 
-            setSendState("success");
-        } catch {
-            setSendState("error");
-        }
-    };
+  const resetForm = () => {
+    setState("idle");
+    setErrorMessage("");
+    setForm({ name: "", email: "", subject: "General", message: "" });
+  };
 
-    const resetForm = () => {
-        setSendState("idle");
-        if (formRef.current) formRef.current.reset();
-    };
+  return (
+    <section id="contact" className="relative px-8 py-32">
+      <div className="mx-auto max-w-[1320px]">
+        <div className="grid grid-cols-12 gap-8">
+          <div className="col-span-12 md:col-span-5">
+            <h2 className="text-[12px] tracking-[0.24em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
+              Contact
+            </h2>
+            <p className="mt-6 text-[clamp(44px,5vw,80px)] font-light leading-[1.0]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+              Send a <span style={{ fontStyle: "italic" }}>letter</span><span style={{ color: "var(--accent)" }}>.</span>
+            </p>
+            <p className="mt-6 max-w-[400px] text-[16px] leading-[1.7]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
+              Partnership, press, or just hello — write something real and we&apos;ll write back. We read everything.
+            </p>
 
-    return (
-        <section id="contact" className="px-6 py-[120px] md:py-[120px]">
-            <div className="mx-auto max-w-[1000px]">
-                <ScrollReveal className="mb-[60px] text-center">
-                    <h2
-                        className="text-[42px] font-bold text-text-cream"
-                        style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                    >
-                        Get in Touch
-                    </h2>
-                    <p
-                        className="mt-3 text-[18px] text-text-muted-blue"
-                        style={{ fontFamily: '"DM Sans", sans-serif' }}
-                    >
-                        Have a question, partnership idea, or just want to say hi?
-                    </p>
-                </ScrollReveal>
-
-                <div className="mx-auto max-w-[650px]">
-                    {/* Contact Form with Paper Crane Animation */}
-                    <ScrollReveal>
-                        <div className="relative overflow-hidden rounded-[20px] border border-border-dark bg-surface-dark p-8 shadow-sm">
-                            {/* Form */}
-                            <AnimatePresence mode="wait">
-                                {sendState === "idle" || sendState === "folding" ? (
-                                    <motion.form
-                                        ref={formRef}
-                                        key="form"
-                                        onSubmit={handleSubmit}
-                                        animate={
-                                            sendState === "folding"
-                                                ? {
-                                                    scaleY: 0,
-                                                    rotateX: 90,
-                                                    opacity: 0,
-                                                }
-                                                : { scaleY: 1, rotateX: 0, opacity: 1 }
-                                        }
-                                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                                        style={{ transformOrigin: "bottom center" }}
-                                    >
-                                        <div className="flex flex-col gap-4">
-                                            <div>
-                                                <label
-                                                    className="mb-1.5 block text-[13px] font-medium text-text-muted-blue"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                >
-                                                    Your Name
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="name"
-                                                    required
-                                                    className="w-full rounded-[12px] border border-border-dark bg-surface-dark-hover px-4 py-3 text-[15px] text-text-cream outline-none transition-all duration-200 focus:border-amber focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label
-                                                    className="mb-1.5 block text-[13px] font-medium text-text-muted-blue"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                >
-                                                    Your Email
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    name="email"
-                                                    required
-                                                    className="w-full rounded-[12px] border border-border-dark bg-surface-dark-hover px-4 py-3 text-[15px] text-text-cream outline-none transition-all duration-200 focus:border-amber focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label
-                                                    className="mb-1.5 block text-[13px] font-medium text-text-muted-blue"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                >
-                                                    Subject
-                                                </label>
-                                                <select
-                                                    name="subject"
-                                                    className="w-full rounded-[12px] border border-border-dark bg-surface-dark-hover px-4 py-3 text-[15px] text-text-cream outline-none transition-all duration-200 focus:border-amber focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                >
-                                                    <option>General Inquiry</option>
-                                                    <option>Partnership</option>
-                                                    <option>Job Posting</option>
-                                                    <option>Press</option>
-                                                    <option>Other</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label
-                                                    className="mb-1.5 block text-[13px] font-medium text-text-muted-blue"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                >
-                                                    Message
-                                                </label>
-                                                <textarea
-                                                    name="message"
-                                                    rows={5}
-                                                    required
-                                                    className="w-full resize-none rounded-[12px] border border-border-dark bg-surface-dark-hover px-4 py-3 text-[15px] text-text-cream outline-none transition-all duration-200 focus:border-amber focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]"
-                                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                                />
-                                            </div>
-
-                                            <button
-                                                type="submit"
-                                                className="mt-2 w-full rounded-[12px] bg-amber py-3.5 text-[15px] font-semibold text-text-dark shadow-[0_4px_20px_rgba(245,166,35,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-bright hover:shadow-[0_6px_30px_rgba(245,166,35,0.35)]"
-                                                style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                            >
-                                                Send Message →
-                                            </button>
-                                        </div>
-                                    </motion.form>
-                                ) : sendState === "flying" ? (
-                                    <motion.div
-                                        key="crane"
-                                        className="flex min-h-[380px] items-center justify-center"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                    >
-                                        <motion.div
-                                            initial={{ y: 0, x: 0, opacity: 1, rotate: 0 }}
-                                            animate={{
-                                                y: -300,
-                                                x: 200,
-                                                opacity: 0,
-                                                rotate: -15,
-                                            }}
-                                            transition={{ duration: 1, ease: "easeIn" }}
-                                        >
-                                            <PaperCrane />
-                                            {/* Sparkle trail */}
-                                            {[...Array(5)].map((_, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    className="absolute h-1 w-1 rounded-full bg-amber"
-                                                    initial={{ opacity: 0.8 }}
-                                                    animate={{
-                                                        opacity: 0,
-                                                        y: 50 + i * 20,
-                                                        x: -(30 + i * 10),
-                                                    }}
-                                                    transition={{
-                                                        duration: 0.6,
-                                                        delay: i * 0.1,
-                                                    }}
-                                                />
-                                            ))}
-                                        </motion.div>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="success"
-                                        className="flex min-h-[380px] flex-col items-center justify-center gap-4"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ duration: 0.4 }}
-                                    >
-                                        <span
-                                            className="text-[60px] text-amber"
-                                            style={{ fontFamily: '"Noto Serif JP", serif' }}
-                                        >
-                                            灯
-                                        </span>
-                                        <p
-                                            className="text-[20px] font-bold text-text-cream"
-                                            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                                        >
-                                            Message sent.
-                                        </p>
-                                        <p
-                                            className="text-[14px] text-text-muted-blue"
-                                            style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                        >
-                                            We&apos;ll get back to you soon.
-                                        </p>
-                                        <button
-                                            onClick={resetForm}
-                                            className="mt-4 text-[14px] font-medium text-amber underline underline-offset-4 transition-colors hover:text-amber-bright"
-                                            style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                        >
-                                            Send another message
-                                        </button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    </ScrollReveal>
+            <div className="mt-12 space-y-4 border-t pt-8" style={{ borderColor: "var(--hairline)" }}>
+              {[
+                ["Email", "hello@akarilabs.io"],
+                ["Office", "Sheridan, Wyoming"],
+                ["Hours", "Mon–Fri · async-first"],
+                ["Founded", "December 2025"],
+              ].map(([k, v]) => (
+                <div key={k} className="flex items-baseline justify-between border-b pb-3" style={{ borderColor: "var(--hairline)" }}>
+                  <span className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>{k}</span>
+                  <span className="text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--ink-soft)" }}>{v}</span>
                 </div>
+              ))}
             </div>
-        </section>
-    );
+          </div>
+
+          <div className="col-span-12 md:col-span-7">
+            <div
+              className="relative border p-10"
+              style={{
+                borderColor: "var(--hairline)",
+                background: "linear-gradient(180deg, var(--card-fade-1) 0%, var(--card-fade-2) 100%)",
+                borderRadius: "var(--clay-radius)",
+                boxShadow: "var(--clay-shadow)",
+              }}
+            >
+              {/* Letter header */}
+              <div className="mb-8 flex items-baseline justify-between border-b pb-4" style={{ borderColor: "var(--hairline)" }}>
+                <span className="text-[11px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
+                  Letter № <span style={{ color: "var(--accent)" }} className="tabular-nums">{letterNum}</span>
+                </span>
+                <span className="text-[11px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
+                  To: Akari Labs
+                </span>
+              </div>
+
+              {state === "sent" ? (
+                <div className="flex min-h-[400px] flex-col items-center justify-center py-12 text-center">
+                  <span className="text-[80px]" style={{ color: "var(--accent)" }}>✓</span>
+                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Sent.</p>
+                  <p className="mt-2 text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>We&apos;ll write back within two business days.</p>
+                  <button
+                    onClick={resetForm}
+                    className="mt-8 text-[12px] tracking-[0.18em] uppercase"
+                    style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--accent)" }}
+                  >
+                    Write another →
+                  </button>
+                </div>
+              ) : state === "error" ? (
+                <div className="flex min-h-[400px] flex-col items-center justify-center py-12 text-center">
+                  <span className="text-[48px]">⚠️</span>
+                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Something went wrong.</p>
+                  <p className="mt-2 max-w-[400px] text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
+                    {errorMessage || "We couldn\u0027t send your message. Please try again."}
+                  </p>
+                  <button
+                    onClick={resetForm}
+                    className="mt-8 px-6 py-3 text-[12px] tracking-[0.18em] uppercase transition-all"
+                    style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--selection-fg)", background: "var(--accent)", fontWeight: 600 }}
+                  >
+                    Try Again →
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={send} className="space-y-6" style={{ opacity: state === "sending" ? 0.5 : 1, transition: "opacity 0.3s" }}>
+                  <FieldLabel label="From">
+                    <input
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder="Your name"
+                      required
+                      className="contact-input"
+                    />
+                  </FieldLabel>
+
+                  <FieldLabel label="Reply to">
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      placeholder="you@domain.com"
+                      required
+                      className="contact-input"
+                    />
+                  </FieldLabel>
+
+                  <FieldLabel label="Regarding">
+                    <div className="flex flex-wrap gap-2">
+                      {["General", "Partnership", "Press", "Job posting", "Other"].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setForm({ ...form, subject: s })}
+                          className="px-3 py-1.5 text-[11px] tracking-[0.14em] uppercase transition-all"
+                          style={{
+                            fontFamily: "'JetBrains Mono',monospace",
+                            color: form.subject === s ? "var(--selection-fg)" : "var(--label)",
+                            background: form.subject === s ? "var(--accent)" : "transparent",
+                            border: `1px solid ${form.subject === s ? "var(--accent)" : "var(--hairline-strong)"}`,
+                            borderRadius: "var(--clay-radius-sm)",
+                          }}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </FieldLabel>
+
+                  <FieldLabel label="Message">
+                    <textarea
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      placeholder="Write something real."
+                      rows={6}
+                      required
+                      className="contact-input resize-none"
+                    />
+                  </FieldLabel>
+
+                  <div className="flex items-center justify-between border-t pt-6" style={{ borderColor: "var(--hairline)" }}>
+                    <span className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
+                      We read everything
+                    </span>
+                    <button
+                      type="submit"
+                      disabled={state === "sending"}
+                      className="inline-flex items-center gap-3 px-6 py-3 text-[12px] tracking-[0.18em] uppercase transition-all hover:gap-4"
+                      style={{
+                        fontFamily: "'JetBrains Mono',monospace",
+                        color: "var(--selection-fg)",
+                        background: "var(--accent)",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {state === "sending" ? "Sending…" : "Send letter"} <span>→</span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

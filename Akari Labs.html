@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Akari Labs — Software that lights the way</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      /* Default = Claymorphism (warm peach pastel) */
+      --bg-1: #FBEFE3;
+      --bg-2: #F7E5D2;
+      --bg-3: #F3DBC2;
+      --ink: #2D1F14;
+      --ink-strong: #1F1308;
+      --ink-soft: #3A2A1C;
+      --ink-mute: #5C4632;
+      --label: #7A6450;
+      --sub: #97826B;
+      --faint: #C4B19A;
+      --hairline: rgba(45,31,20,0.10);
+      --hairline-strong: rgba(45,31,20,0.18);
+      --tile: #FFF4E6;
+      --tile-grid: rgba(45,31,20,0.08);
+      --paper-fade-top: rgba(251,239,227,1);
+      --paper-fade-bot: rgba(251,239,227,1);
+      --hero-tint: 220,130,70;
+      --selection-fg: #FFF4E6;
+      --pattern-stroke: %23DC8246;
+      --nav-bg: rgba(251,239,227,0.78);
+      --card-fade-1: rgba(255,255,255,0.55);
+      --card-fade-2: rgba(255,255,255,0.22);
+      /* Clay shadow + radius tokens */
+      --clay-radius: 22px;
+      --clay-radius-sm: 14px;
+      --clay-shadow:
+        14px 14px 32px rgba(180, 120, 60, 0.18),
+        -10px -10px 24px rgba(255, 255, 255, 0.85),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+      --clay-shadow-sm:
+        6px 6px 14px rgba(180, 120, 60, 0.14),
+        -4px -4px 10px rgba(255, 255, 255, 0.75),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+      --clay-shadow-press:
+        inset 6px 6px 14px rgba(180, 120, 60, 0.18),
+        inset -4px -4px 10px rgba(255, 255, 255, 0.75);
+    }
+    /* Washi paper — original editorial paper, opt-in via theme switch */
+    [data-theme="paper"] {
+      --bg-1: #FBF5E7;
+      --bg-2: #F8F1DF;
+      --bg-3: #F5EED8;
+      --ink: #1A1A1A;
+      --ink-strong: #1A1A1A;
+      --ink-soft: #2A2722;
+      --ink-mute: #4A463F;
+      --label: #6B6557;
+      --sub: #857F70;
+      --faint: #B0A998;
+      --hairline: rgba(26,26,26,0.12);
+      --hairline-strong: rgba(26,26,26,0.20);
+      --tile: #FBF5E7;
+      --tile-grid: rgba(26,26,26,0.16);
+      --paper-fade-top: rgba(248,241,223,1);
+      --paper-fade-bot: rgba(248,241,223,1);
+      --hero-tint: 201,122,31;
+      --selection-fg: #F5F0E4;
+      --pattern-stroke: %23C97A1F;
+      --nav-bg: rgba(245,240,228,0.78);
+      --card-fade-1: rgba(255,255,255,0.5);
+      --card-fade-2: rgba(255,255,255,0.2);
+      /* Disable clay treatment on paper */
+      --clay-radius: 0px;
+      --clay-radius-sm: 0px;
+      --clay-shadow: none;
+      --clay-shadow-sm: none;
+    }
+    /* Claude — warm cream + Claude orange */
+    [data-theme="claude"] {
+      --bg-1: #F0EEE5;
+      --bg-2: #ECE9DD;
+      --bg-3: #E7E3D2;
+      --ink: #141413;
+      --ink-strong: #0F0F0E;
+      --ink-soft: #1F1E1B;
+      --ink-mute: #3D3C36;
+      --label: #5C5A4F;
+      --sub: #7E7B6E;
+      --faint: #ACA89A;
+      --hairline: rgba(20,20,19,0.12);
+      --hairline-strong: rgba(20,20,19,0.22);
+      --tile: #F4F1E7;
+      --tile-grid: rgba(20,20,19,0.16);
+      --paper-fade-top: rgba(240,238,229,1);
+      --paper-fade-bot: rgba(240,238,229,1);
+      --hero-tint: 213,119,87;
+      --selection-fg: #F4F1E7;
+      --pattern-stroke: %23D57757;
+      --nav-bg: rgba(240,238,229,0.78);
+      --card-fade-1: rgba(255,255,255,0.45);
+      --card-fade-2: rgba(255,255,255,0.18);
+      --clay-shadow:
+        14px 14px 32px rgba(120,90,50,0.16),
+        -10px -10px 24px rgba(255,255,255,0.85),
+        inset 0 0 0 1px rgba(255,255,255,0.5);
+      --clay-shadow-sm:
+        6px 6px 14px rgba(120,90,50,0.12),
+        -4px -4px 10px rgba(255,255,255,0.75),
+        inset 0 0 0 1px rgba(255,255,255,0.45);
+    }
+    /* Midnight — pure black, apple-style */
+    [data-theme="midnight"] {
+      --bg-1: #000000;
+      --bg-2: #050505;
+      --bg-3: #080808;
+      --ink: #F2F2F2;
+      --ink-strong: #FFFFFF;
+      --ink-soft: #E5E5E5;
+      --ink-mute: #B8B8B8;
+      --label: #8E8E8E;
+      --sub: #6B6B6B;
+      --faint: #4A4A4A;
+      --hairline: rgba(255,255,255,0.10);
+      --hairline-strong: rgba(255,255,255,0.20);
+      --tile: #0A0A0A;
+      --tile-grid: rgba(255,255,255,0.10);
+      --paper-fade-top: rgba(0,0,0,1);
+      --paper-fade-bot: rgba(0,0,0,1);
+      --hero-tint: 230,180,90;
+      --selection-fg: #000000;
+      --pattern-stroke: %23E6B45A;
+      --nav-bg: rgba(8,8,8,0.78);
+      --card-fade-1: rgba(20,20,20,0.6);
+      --card-fade-2: rgba(10,10,10,0.3);
+      --clay-shadow:
+        14px 14px 32px rgba(0,0,0,0.55),
+        -8px -8px 20px rgba(60,60,60,0.20),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      --clay-shadow-sm:
+        6px 6px 14px rgba(0,0,0,0.45),
+        -3px -3px 8px rgba(60,60,60,0.15),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    /* Ghibli — soft sky + meadow, hand-painted feel */
+    [data-theme="ghibli"] {
+      --bg-1: #E8EDD7;
+      --bg-2: #D9E5C8;
+      --bg-3: #C9DCBC;
+      --ink: #1F2D1A;
+      --ink-strong: #14210F;
+      --ink-soft: #2A3923;
+      --ink-mute: #4A5A40;
+      --label: #6B7A60;
+      --sub: #8A9A80;
+      --faint: #B6C4AB;
+      --hairline: rgba(31,45,26,0.14);
+      --hairline-strong: rgba(31,45,26,0.24);
+      --tile: #EDF1DE;
+      --tile-grid: rgba(31,45,26,0.16);
+      --paper-fade-top: rgba(232,237,215,1);
+      --paper-fade-bot: rgba(232,237,215,1);
+      --hero-tint: 220,140,70;
+      --selection-fg: #F4F8E8;
+      --pattern-stroke: %235B7A40;
+      --nav-bg: rgba(232,237,215,0.78);
+      --card-fade-1: rgba(255,255,255,0.4);
+      --card-fade-2: rgba(255,255,255,0.15);
+      --clay-shadow:
+        14px 14px 32px rgba(60,90,40,0.18),
+        -10px -10px 24px rgba(255,255,255,0.75),
+        inset 0 0 0 1px rgba(255,255,255,0.45);
+      --clay-shadow-sm:
+        6px 6px 14px rgba(60,90,40,0.14),
+        -4px -4px 10px rgba(255,255,255,0.65),
+        inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+    /* Claymorphism — chunky pastel with soft inset shadows */
+    [data-theme="clay"] {
+      --bg-1: #EFE7F7;
+      --bg-2: #E7DEF2;
+      --bg-3: #DED3EC;
+      --ink: #2A1F3A;
+      --ink-strong: #1B1330;
+      --ink-soft: #382A4A;
+      --ink-mute: #564670;
+      --label: #6F5F8C;
+      --sub: #8C7DA8;
+      --faint: #B8AECF;
+      --hairline: rgba(42,31,58,0.10);
+      --hairline-strong: rgba(42,31,58,0.18);
+      --tile: #F5EEFB;
+      --tile-grid: rgba(42,31,58,0.10);
+      --paper-fade-top: rgba(239,231,247,1);
+      --paper-fade-bot: rgba(239,231,247,1);
+      --hero-tint: 178,130,220;
+      --selection-fg: #F5EEFB;
+      --pattern-stroke: %23B282DC;
+      --nav-bg: rgba(239,231,247,0.78);
+      --card-fade-1: rgba(255,255,255,0.55);
+      --card-fade-2: rgba(255,255,255,0.25);
+      --clay-shadow:
+        14px 14px 32px rgba(110,80,160,0.20),
+        -10px -10px 24px rgba(255,255,255,0.85),
+        inset 0 0 0 1px rgba(255,255,255,0.55);
+      --clay-shadow-sm:
+        6px 6px 14px rgba(110,80,160,0.16),
+        -4px -4px 10px rgba(255,255,255,0.75),
+        inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+    /* Glassmorphism — frosted glass on tinted aurora */
+    [data-theme="glass"] {
+      --bg-1: #0E1A2E;
+      --bg-2: #142342;
+      --bg-3: #1B2C50;
+      --ink: #F0F4FF;
+      --ink-strong: #FFFFFF;
+      --ink-soft: #DDE4F5;
+      --ink-mute: #A8B3CC;
+      --label: #8290AC;
+      --sub: #657390;
+      --faint: #4A5675;
+      --hairline: rgba(255,255,255,0.14);
+      --hairline-strong: rgba(255,255,255,0.26);
+      --tile: rgba(255,255,255,0.06);
+      --tile-grid: rgba(255,255,255,0.10);
+      --paper-fade-top: rgba(14,26,46,1);
+      --paper-fade-bot: rgba(14,26,46,1);
+      --hero-tint: 140,180,255;
+      --selection-fg: #0E1A2E;
+      --pattern-stroke: %238CB4FF;
+      --nav-bg: rgba(20,35,66,0.55);
+      --card-fade-1: rgba(255,255,255,0.10);
+      --card-fade-2: rgba(255,255,255,0.04);
+      --clay-shadow:
+        0 8px 32px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      --clay-shadow-sm:
+        0 4px 16px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    [data-theme="glass"] body,
+    body[data-theme-bg="glass"] {
+      background:
+        radial-gradient(ellipse at 15% 10%, rgba(140,180,255,0.35) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 30%, rgba(220,140,255,0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(100,220,200,0.20) 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%) !important;
+    }
+    /* Neumorphism — mono surface with dual shadows */
+    [data-theme="neu"] {
+      --bg-1: #E4E7EE;
+      --bg-2: #DFE2EA;
+      --bg-3: #DADDE5;
+      --ink: #2C3142;
+      --ink-strong: #1C2030;
+      --ink-soft: #3A4055;
+      --ink-mute: #5A6178;
+      --label: #7A8298;
+      --sub: #9098AC;
+      --faint: #B8BECD;
+      --hairline: rgba(44,49,66,0.08);
+      --hairline-strong: rgba(44,49,66,0.16);
+      --tile: #E4E7EE;
+      --tile-grid: rgba(44,49,66,0.06);
+      --paper-fade-top: rgba(228,231,238,1);
+      --paper-fade-bot: rgba(228,231,238,1);
+      --hero-tint: 110,130,180;
+      --selection-fg: #E4E7EE;
+      --pattern-stroke: %236E82B4;
+      --nav-bg: rgba(228,231,238,0.82);
+      --card-fade-1: rgba(255,255,255,0.6);
+      --card-fade-2: rgba(190,196,210,0.3);
+    }
+
+    html, body { background: var(--bg-1); color: var(--ink); transition: background 600ms ease, color 400ms ease; }
+    body { font-family: 'Inter Tight', 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    html { scroll-behavior: smooth; }
+    *::selection { background: var(--accent, #C97A1F); color: var(--selection-fg); }
+
+    .contact-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--ink);
+      font-family: 'Inter Tight', 'DM Sans', sans-serif;
+      font-size: 16px;
+      padding: 4px 0;
+    }
+    .contact-input::placeholder { color: var(--faint); }
+    .contact-input:focus { outline: none; }
+
+    html, body { scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
+
+    @keyframes lantern-sway {
+      0%, 100% { transform: rotate(-2.2deg); }
+      50%      { transform: rotate(2.2deg); }
+    }
+    @keyframes lantern-rise {
+      0%   { transform: translate3d(var(--driftX, 0px), 110%, 0) rotate(-1.5deg); opacity: 0; }
+      8%   { opacity: 1; }
+      50%  { transform: translate3d(calc(var(--driftX, 0px) * -1), 50%, 0) rotate(1.5deg); }
+      92%  { opacity: 1; }
+      100% { transform: translate3d(var(--driftX, 0px), -20%, 0) rotate(-1.5deg); opacity: 0; }
+    }
+    @keyframes ember-rise {
+      0%   { transform: translate3d(0, 100%, 0); opacity: 0; }
+      15%  { opacity: 0.9; }
+      85%  { opacity: 0.7; }
+      100% { transform: translate3d(var(--emberX, 6px), -40%, 0); opacity: 0; }
+    }
+    @keyframes glow-flicker {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      45%      { opacity: 0.88; filter: brightness(1.08); }
+      72%      { opacity: 0.96; filter: brightness(0.96); }
+    }
+    @keyframes moon-breathe {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50%      { opacity: 0.75; transform: scale(1.04); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.55; transform: scale(1.4); }
+    }
+    @keyframes drift-slow {
+      0%   { transform: translate3d(0, 0, 0); }
+      50%  { transform: translate3d(40px, -10px, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+
+    /* Page wash — uses theme vars */
+    body {
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(var(--hero-tint), 0.04) 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+      background-attachment: fixed;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       GLOBAL CLAYMORPHISM TREATMENT (default; opted out by [data-theme="paper"])
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* Tile cards — chunky soft shadows + rounded corners */
+    [style*="background: var(--tile)"],
+    [style*="background:var(--tile)"] {
+      border-radius: var(--clay-radius);
+      box-shadow: var(--clay-shadow);
+      border-color: transparent !important;
+    }
+    /* Tile-grid containers (specs grid etc) — round the outer wrap */
+    [style*="background: var(--tile-grid)"],
+    [style*="background:var(--tile-grid)"] {
+      border-radius: var(--clay-radius);
+      overflow: hidden;
+      box-shadow: var(--clay-shadow);
+    }
+    /* Cards with the card-fade gradient (contact letter, etc) */
+    [style*="card-fade-1"] {
+      border-radius: var(--clay-radius);
+      box-shadow: var(--clay-shadow);
+      border-color: transparent !important;
+    }
+    /* Bordered chips, tags, links, badges */
+    [data-theme="paper"] :is(button, a, span, input, form).clay-skip { /* no-op anchor */ }
+    :root:not([data-theme="paper"]) span.border:not(.no-clay),
+    :root:not([data-theme="paper"]) a.border:not(.no-clay),
+    :root:not([data-theme="paper"]) button.border:not(.no-clay) {
+      border-radius: var(--clay-radius-sm);
+      border-color: transparent !important;
+      box-shadow: var(--clay-shadow-sm);
+    }
+    /* Phone bezel + mock-cards (nested gradient cards) */
+    :root:not([data-theme="paper"]) [style*="linear-gradient(180deg, var(--tile)"],
+    :root:not([data-theme="paper"]) [style*="linear-gradient(180deg,var(--tile)"] {
+      border-radius: var(--clay-radius);
+      box-shadow: var(--clay-shadow);
+      border-color: transparent !important;
+    }
+    /* Navbar — rounded pill on scroll */
+    :root:not([data-theme="paper"]) nav[class*="fixed"][class*="top-0"] {
+      border-radius: 0 0 var(--clay-radius) var(--clay-radius);
+    }
+    /* Inputs */
+    :root:not([data-theme="paper"]) .contact-input {
+      border-radius: var(--clay-radius-sm);
+      padding: 10px 14px !important;
+      background: rgba(0,0,0,0.03);
+      box-shadow: inset 4px 4px 10px rgba(0,0,0,0.06), inset -3px -3px 8px rgba(255,255,255,0.6);
+    }
+    [data-theme="midnight"] .contact-input,
+    [data-theme="glass"] .contact-input {
+      background: rgba(255,255,255,0.04);
+      box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4), inset -3px -3px 8px rgba(255,255,255,0.04);
+    }
+
+    /* ─── Glassmorphism keeps its frosted blur on top of the clay base ─── */
+    [data-theme="glass"] [style*="background: var(--tile)"],
+    [data-theme="glass"] [style*="background:var(--tile)"] {
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    }
+
+    /* ─── Neumorphism: dual highlight + shadow on a single surface ─── */
+    [data-theme="neu"] [style*="background: var(--tile)"],
+    [data-theme="neu"] [style*="background:var(--tile)"] {
+      background: var(--bg-1) !important;
+      box-shadow:
+        9px 9px 22px rgba(163, 170, 188, 0.55),
+        -9px -9px 22px rgba(255, 255, 255, 0.95) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

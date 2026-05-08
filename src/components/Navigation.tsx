@@ -1,300 +1,112 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Volume2, VolumeX } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 
 const navLinks = [
-    { label: "Products", href: "#products" },
-    { label: "About", href: "#about" },
-    { label: "Team", href: "#team" },
-    { label: "Contact", href: "#contact" },
+  { label: "Index", href: "#index", num: "01" },
+  { label: "Work", href: "#work", num: "02" },
+  { label: "Studio", href: "#studio", num: "03" },
+  { label: "Team", href: "#team", num: "04" },
+  { label: "Contact", href: "#contact", num: "05" },
 ];
 
-// Easter egg colors
-const easterEggColors = ["#F5A623", "#7BC67E", "#FF6B6B", "#F5A623"];
-
 export default function Navigation() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState("");
-    const [audioPlaying, setAudioPlaying] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
-    // Listen for audio state changes from the video component
-    useEffect(() => {
-        const onAudioState = (e: Event) => {
-            setAudioPlaying((e as CustomEvent).detail.playing);
-        };
-        window.addEventListener("audio-state", onAudioState);
-        return () => window.removeEventListener("audio-state", onAudioState);
-    }, []);
-
-    const toggleAudio = useCallback(() => {
-        window.dispatchEvent(new CustomEvent("toggle-audio"));
-    }, []);
-
-    // Easter egg state
-    const clickTimestamps = useRef<number[]>([]);
-    const [easterEggActive, setEasterEggActive] = useState(false);
-    const [colorIndex, setColorIndex] = useState(0);
-    const [lanterns, setLanterns] = useState<{ id: number; x: number; y: number; angle: number }[]>([]);
-
-    useEffect(() => {
-        const onScroll = () => {
-            setScrolled(window.scrollY > window.innerHeight * 0.8);
-
-            const sections = ["products", "about", "team", "contact"];
-            for (const id of sections.reverse()) {
-                const el = document.getElementById(id);
-                if (el && el.getBoundingClientRect().top < 200) {
-                    setActiveSection(id);
-                    return;
-                }
-            }
-            setActiveSection("");
-        };
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
-
-    const scrollTo = (href: string) => {
-        setMobileOpen(false);
-        const el = document.querySelector(href);
-        if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 80;
-            window.scrollTo({ top, behavior: "smooth" });
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      const ids = ["index", "work", "studio", "team", "contact"];
+      for (let i = ids.length - 1; i >= 0; i--) {
+        const el = document.getElementById(ids[i]);
+        if (el && el.getBoundingClientRect().top < 200) {
+          setActiveSection(ids[i]);
+          return;
         }
+      }
+      setActiveSection("");
     };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    // Easter egg: triple click on 灯
-    const handleLogoClick = useCallback(
-        (e: React.MouseEvent) => {
-            const now = Date.now();
-            clickTimestamps.current.push(now);
-            // Keep only last 3 clicks
-            if (clickTimestamps.current.length > 3) {
-                clickTimestamps.current = clickTimestamps.current.slice(-3);
-            }
+  const scrollTo = useCallback((href: string) => {
+    const el = document.querySelector(href);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 24;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  }, []);
 
-            if (clickTimestamps.current.length >= 3) {
-                const timeDiff =
-                    clickTimestamps.current[2] - clickTimestamps.current[0];
-                if (timeDiff < 1000 && !easterEggActive) {
-                    // Trigger!
-                    setEasterEggActive(true);
-                    clickTimestamps.current = [];
+  return (
+    <nav
+      className="fixed top-0 left-0 right-0 z-40 transition-all"
+      style={{
+        background: scrolled ? "var(--nav-bg)" : "transparent",
+        backdropFilter: scrolled ? "blur(14px) saturate(140%)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(14px) saturate(140%)" : "none",
+        borderBottom: scrolled ? "1px solid var(--hairline)" : "1px solid transparent",
+      }}
+    >
+      <div className="mx-auto flex max-w-[1320px] items-baseline justify-between px-8 py-5">
+        {/* Logo */}
+        <a
+          href="#"
+          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          className="flex items-baseline gap-2.5 group"
+        >
+          <span
+            className="text-[26px] leading-none transition-colors"
+            style={{ fontFamily: "'Fraunces',serif", color: "var(--accent)", fontWeight: 600, fontStyle: "italic" }}
+          >
+            A
+          </span>
+          <span
+            className="flex items-baseline gap-1.5 text-[13px] tracking-[0.18em] uppercase"
+            style={{ color: "var(--ink-soft)", fontFamily: "'Inter Tight','DM Sans',sans-serif", fontWeight: 600 }}
+          >
+            Akari <span style={{ color: "var(--sub)" }}>Labs</span>
+          </span>
+        </a>
 
-                    // Spawn lanterns
-                    const rect = (e.target as HTMLElement).getBoundingClientRect();
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const newLanterns = Array.from({ length: 35 }, (_, i) => ({
-                        id: Date.now() + i,
-                        x: cx,
-                        y: cy,
-                        angle: (i / 35) * 360 + Math.random() * 30,
-                    }));
-                    setLanterns(newLanterns);
-
-                    // Color cycling
-                    let ci = 0;
-                    const colorInterval = setInterval(() => {
-                        ci = (ci + 1) % easterEggColors.length;
-                        setColorIndex(ci);
-                    }, 250);
-
-                    // Clean up after 3s
-                    setTimeout(() => {
-                        setEasterEggActive(false);
-                        setLanterns([]);
-                        setColorIndex(0);
-                        clearInterval(colorInterval);
-                    }, 3000);
-                }
-            }
-        },
-        [easterEggActive]
-    );
-
-    return (
-        <>
-            <motion.nav
-                className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-                style={{
-                    backgroundColor: scrolled
-                        ? "rgba(26, 31, 46, 0.8)"
-                        : "transparent",
-                    backdropFilter: scrolled ? "blur(12px)" : "none",
-                    WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-                    borderBottom: scrolled
-                        ? "1px solid rgba(46, 52, 70, 0.5)"
-                        : "1px solid transparent",
-                }}
+        {/* Desktop Links */}
+        <div className="hidden items-baseline gap-9 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
+              className="group relative text-[12px] tracking-[0.16em] uppercase transition-colors"
+              style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                color: activeSection === link.href.slice(1) ? "var(--accent)" : "var(--label)",
+                fontWeight: 500,
+              }}
             >
-                <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
-                    {/* Logo */}
-                    <a
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}
-                        className="flex items-center gap-2"
-                    >
-                        <span
-                            className="text-[28px] animate-pulse-glow select-none"
-                            style={{
-                                fontFamily: '"Noto Serif JP", serif',
-                                color: easterEggActive
-                                    ? easterEggColors[colorIndex]
-                                    : "#F5A623",
-                                transition: "color 0.15s ease",
-                            }}
-                            onClick={handleLogoClick}
-                        >
-                            灯
-                        </span>
-                        <span
-                            className="text-[20px] font-bold text-text-cream"
-                            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                        >
-                            Akari Labs
-                        </span>
-                    </a>
+              <span className="mr-2 tabular-nums" style={{ color: "var(--faint)" }}>{link.num}</span>
+              {link.label}
+            </a>
+          ))}
+        </div>
 
-                    {/* Desktop Links */}
-                    <div className="hidden items-center gap-8 md:flex">
-                        {navLinks.map((link) => (
-                            <button
-                                key={link.href}
-                                onClick={() => scrollTo(link.href)}
-                                className="group relative text-[15px] font-medium transition-colors duration-200"
-                                style={{
-                                    fontFamily: '"DM Sans", sans-serif',
-                                    color:
-                                        activeSection === link.href.slice(1)
-                                            ? "#F5A623"
-                                            : "#9BA4B8",
-                                }}
-                            >
-                                {link.label}
-                                <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-amber transition-all duration-200 group-hover:w-full" />
-                            </button>
-                        ))}
-                        <button
-                            onClick={toggleAudio}
-                            aria-label={audioPlaying ? "Mute audio" : "Enable audio"}
-                            title={audioPlaying ? "Mute audio" : "Enable audio"}
-                            className="flex items-center justify-center rounded-full p-2 transition-all duration-200 hover:bg-amber/10"
-                            style={{
-                                color: audioPlaying ? "#F5A623" : "#6B7280",
-                            }}
-                        >
-                            {audioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
-                        </button>
-                        <button
-                            onClick={() => scrollTo("#contact")}
-                            className="rounded-[12px] bg-amber px-5 py-2 text-[14px] font-semibold text-text-dark transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(245,166,35,0.3)]"
-                            style={{ fontFamily: '"DM Sans", sans-serif' }}
-                        >
-                            Get in Touch
-                        </button>
-                    </div>
-
-                    {/* Mobile hamburger */}
-                    <button
-                        className="text-text-cream md:hidden"
-                        onClick={() => setMobileOpen(true)}
-                        aria-label="Open menu"
-                    >
-                        <Menu size={24} />
-                    </button>
-                </div>
-            </motion.nav>
-
-            {/* Easter egg: amber flash */}
-            <AnimatePresence>
-                {easterEggActive && (
-                    <motion.div
-                        className="pointer-events-none fixed inset-0 z-[200]"
-                        style={{ background: "rgba(245,166,35,0.1)" }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.1 }}
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Easter egg: floating lanterns */}
-            <AnimatePresence>
-                {lanterns.map((l) => {
-                    const rad = (l.angle * Math.PI) / 180;
-                    const dist = 200 + Math.random() * 200;
-                    return (
-                        <motion.span
-                            key={l.id}
-                            className="pointer-events-none fixed z-[201] text-[18px]"
-                            style={{
-                                fontFamily: '"Noto Serif JP", serif',
-                                color: "#F5A623",
-                                left: l.x,
-                                top: l.y,
-                            }}
-                            initial={{ opacity: 1, scale: 1 }}
-                            animate={{
-                                x: Math.cos(rad) * dist,
-                                y: Math.sin(rad) * dist - 100,
-                                opacity: 0,
-                                scale: 0.3,
-                            }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 2, ease: "easeOut" }}
-                        >
-                            灯
-                        </motion.span>
-                    );
-                })}
-            </AnimatePresence>
-
-            {/* Mobile overlay */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-bg-dark/95 backdrop-blur-xl"
-                        initial={{ x: "100%", opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: "100%", opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                        <button
-                            className="absolute right-6 top-6 text-text-cream"
-                            onClick={() => setMobileOpen(false)}
-                            aria-label="Close menu"
-                        >
-                            <X size={28} />
-                        </button>
-                        <div className="flex flex-col items-center gap-8">
-                            {navLinks.map((link) => (
-                                <button
-                                    key={link.href}
-                                    onClick={() => scrollTo(link.href)}
-                                    className="text-[24px] font-medium text-text-cream transition-colors hover:text-amber"
-                                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                                >
-                                    {link.label}
-                                </button>
-                            ))}
-                            <button
-                                onClick={() => scrollTo("#contact")}
-                                className="mt-4 rounded-[12px] bg-amber px-8 py-3 text-[16px] font-semibold text-text-dark"
-                                style={{ fontFamily: '"DM Sans", sans-serif' }}
-                            >
-                                Get in Touch
-                            </button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
+        {/* CTA */}
+        <a
+          href="#contact"
+          onClick={(e) => { e.preventDefault(); scrollTo("#contact"); }}
+          className="hidden items-baseline gap-2 px-4 py-2 text-[12px] tracking-[0.14em] uppercase transition-all md:inline-flex"
+          style={{
+            fontFamily: "'JetBrains Mono',monospace",
+            color: "var(--accent)",
+            border: "1px solid var(--accent-line)",
+            background: "var(--accent-soft)",
+            fontWeight: 500,
+            borderRadius: "var(--clay-radius-sm)",
+          }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
+          Open for work
+        </a>
+      </div>
+    </nav>
+  );
 }

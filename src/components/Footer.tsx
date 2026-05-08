@@ -1,164 +1,85 @@
 "use client";
+import { useState } from "react";
 
-const footerLinks = {
-    products: [
-        { label: "PMHNP Hiring", href: "https://pmhnphiring.com", external: true },
-        { label: "Gym Tracker", href: "#", external: false, suffix: "(Coming Soon)" },
-    ],
-    company: [
-        { label: "About", href: "#about" },
-        { label: "Team", href: "#team" },
-        { label: "Contact", href: "#contact" },
-    ],
-    connect: [
-        { label: "Email", href: "mailto:hello@akarilabs.io", external: false },
-    ],
-};
+function NewsletterForm() {
+  const [submitted, setSubmitted] = useState(false);
 
-/* Inline SVG asanoha pattern */
-const asanohaPattern = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 0L40 20L80 0M0 80L40 60L80 80M0 0L40 40L0 80M80 0L40 40L80 80M0 40L40 20L80 40M0 40L40 60L80 40' stroke='%23F5A623' stroke-width='0.5' fill='none' opacity='0.04'/%3E%3C/svg%3E")`;
+  if (submitted) {
+    return (
+      <p className="mt-3 text-[12px] tracking-[0.14em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--accent)" }}>
+        ✓ You&apos;re on the list. First issue drops next quarter.
+      </p>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+      className="mt-3 flex"
+    >
+      <input
+        type="email"
+        placeholder="you@domain.com"
+        required
+        className="flex-1 border bg-transparent px-3 py-2 text-[12px] outline-none"
+        style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--ink-soft)", borderColor: "var(--hairline-strong)" }}
+      />
+      <button type="submit" className="border border-l-0 px-3 text-[12px] tracking-[0.14em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--accent)", borderColor: "var(--hairline-strong)" }}>→</button>
+    </form>
+  );
+}
 
 export default function Footer() {
-    const scrollTo = (href: string) => {
-        const el = document.querySelector(href);
-        if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 80;
-            window.scrollTo({ top, behavior: "smooth" });
-        }
-    };
-
-    return (
-        <footer
-            className="relative px-6 pb-10 pt-20"
-            style={{
-                backgroundImage: asanohaPattern,
-                backgroundRepeat: "repeat",
-            }}
-        >
-            <div className="mx-auto grid max-w-[1100px] grid-cols-2 gap-10 md:grid-cols-4">
-                {/* Brand */}
-                <div className="col-span-2 md:col-span-1">
-                    <div className="flex items-center gap-2">
-                        <span
-                            className="text-[28px] text-amber"
-                            style={{ fontFamily: '"Noto Serif JP", serif', fontWeight: 700 }}
-                        >
-                            灯
-                        </span>
-                        <span
-                            className="text-[20px] font-bold text-text-cream"
-                            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                        >
-                            Akari Labs
-                        </span>
-                    </div>
-                    <p
-                        className="mt-3 text-[14px] text-text-dim"
-                        style={{ fontFamily: '"DM Sans", sans-serif' }}
-                    >
-                        Software that lights the way.
-                    </p>
-                </div>
-
-                {/* Products */}
-                <div>
-                    <h4
-                        className="text-[14px] font-bold uppercase tracking-[0.06em] text-text-cream"
-                        style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                    >
-                        Products
-                    </h4>
-                    <div className="mt-4 flex flex-col gap-3">
-                        {footerLinks.products.map((link) => (
-                            <a
-                                key={link.label}
-                                href={link.href}
-                                target={link.external ? "_blank" : undefined}
-                                rel={link.external ? "noopener noreferrer" : undefined}
-                                className="text-[14px] text-text-dim transition-colors duration-200 hover:text-text-cream"
-                                style={{ fontFamily: '"DM Sans", sans-serif' }}
-                            >
-                                {link.label}
-                                {"suffix" in link && (
-                                    <span className="ml-1 text-text-dim">{link.suffix}</span>
-                                )}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Company */}
-                <div>
-                    <h4
-                        className="text-[14px] font-bold uppercase tracking-[0.06em] text-text-cream"
-                        style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                    >
-                        Company
-                    </h4>
-                    <div className="mt-4 flex flex-col gap-3">
-                        {footerLinks.company.map((link) => (
-                            <button
-                                key={link.label}
-                                onClick={() => scrollTo(link.href)}
-                                className="text-left text-[14px] text-text-dim transition-colors duration-200 hover:text-text-cream"
-                                style={{ fontFamily: '"DM Sans", sans-serif' }}
-                            >
-                                {link.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Connect */}
-                <div>
-                    <h4
-                        className="text-[14px] font-bold uppercase tracking-[0.06em] text-text-cream"
-                        style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-                    >
-                        Connect
-                    </h4>
-                    <div className="mt-4 flex flex-col gap-3">
-                        {footerLinks.connect.map((link) => (
-                            <a
-                                key={link.label}
-                                href={link.href}
-                                target={link.external ? "_blank" : undefined}
-                                rel={link.external ? "noopener noreferrer" : undefined}
-                                className="text-[14px] text-text-dim transition-colors duration-200 hover:text-text-cream"
-                                style={{ fontFamily: '"DM Sans", sans-serif' }}
-                            >
-                                {link.label}
-                            </a>
-                        ))}
-                    </div>
-                </div>
+  return (
+    <footer className="relative border-t px-8 py-16" style={{ borderColor: "var(--hairline)" }}>
+      <div className="mx-auto max-w-[1320px]">
+        <div className="grid grid-cols-12 gap-8">
+          <div className="col-span-12 md:col-span-5">
+            <div className="flex items-baseline gap-3">
+              <span className="text-[24px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+                Akari <span style={{ color: "var(--sub)", fontStyle: "italic" }}>Labs</span>
+              </span>
             </div>
+            <p className="mt-4 max-w-[360px] text-[14px] leading-[1.65]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
+              An independent software studio. Sheridan, Wyoming. Lighting up small corners of the internet, one focused product at a time.
+            </p>
+          </div>
 
-            {/* Divider */}
-            <div className="mx-auto mt-10 max-w-[1100px] border-t border-border-dark" />
+          <div className="col-span-6 md:col-span-2">
+            <h4 className="text-[11px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>Work</h4>
+            <ul className="mt-4 space-y-2.5 text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif" }}>
+              <li><a href="https://pmhnphiring.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[var(--accent)]" style={{ color: "var(--ink-mute)" }}>PMHNP Hiring ↗</a></li>
+              <li><a href="#work" className="transition-colors hover:text-[var(--accent)]" style={{ color: "var(--ink-mute)" }}>Gym Tracker</a></li>
+            </ul>
+          </div>
 
-            {/* Copyright */}
-            <div className="mx-auto mt-5 flex max-w-[1100px] flex-col items-center justify-between gap-2 sm:flex-row">
-                <p
-                    className="text-[13px] text-text-dim"
-                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                >
-                    © 2026 Akari Labs LLC · Sheridan, Wyoming
-                </p>
-                <p
-                    className="text-[13px] text-text-dim"
-                    style={{ fontFamily: '"DM Sans", sans-serif' }}
-                >
-                    Made with{" "}
-                    <span
-                        className="text-amber"
-                        style={{ fontFamily: '"Noto Serif JP", serif' }}
-                    >
-                        灯り
-                    </span>{" "}
-                    in Wyoming
-                </p>
-            </div>
-        </footer>
-    );
+          <div className="col-span-6 md:col-span-2">
+            <h4 className="text-[11px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>Studio</h4>
+            <ul className="mt-4 space-y-2.5 text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif" }}>
+              <li><a href="#studio" className="transition-colors hover:text-[var(--accent)]" style={{ color: "var(--ink-mute)" }}>About</a></li>
+              <li><a href="#team" className="transition-colors hover:text-[var(--accent)]" style={{ color: "var(--ink-mute)" }}>Team</a></li>
+              <li><a href="#contact" className="transition-colors hover:text-[var(--accent)]" style={{ color: "var(--ink-mute)" }}>Contact</a></li>
+            </ul>
+          </div>
+
+          <div className="col-span-12 md:col-span-3">
+            <h4 className="text-[11px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>Newsletter</h4>
+            <p className="mt-4 text-[13px] leading-[1.6]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
+              Quarterly. What we built. What we shipped. What we learned.
+            </p>
+            <NewsletterForm />
+          </div>
+        </div>
+
+        <div className="mt-16 flex flex-col items-baseline justify-between gap-4 border-t pt-6 md:flex-row" style={{ borderColor: "var(--hairline)" }}>
+          <p className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--faint)" }}>
+            © 2026 Akari Labs LLC · Sheridan, Wyoming
+          </p>
+          <p className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--faint)" }}>
+            Made with <span style={{ color: "var(--accent)" }}>♥</span> in WY
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
 }
