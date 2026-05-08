@@ -65,7 +65,7 @@ export default function PMHNPCase() {
           <div className="mt-1 flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "#3F8A5E" }}>
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#3F8A5E]" /> Live · pmhnphiring.com
           </div>
-          <h3 className="mt-6 text-[40px] font-light leading-[1.0]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>PMHNP<br/>Hiring</h3>
+          <h3 className="mt-6 text-[40px] font-light leading-[1.0]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>PMHNP<br/>Hiring</h3>
           <dl className="mt-6 space-y-3 text-[12px]" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
             {[["Sector", "Healthcare"], ["Audience", "Psychiatric NPs"], ["Launched", "Jan 2026"]].map(([k, v]) => (
               <div key={k} className="flex items-baseline justify-between border-b pb-2" style={{ borderColor: "var(--hairline)" }}>
@@ -79,7 +79,7 @@ export default function PMHNPCase() {
 
       {/* Main */}
       <div className="col-span-12 md:col-span-9">
-        <p className="max-w-[640px] text-[22px] font-light leading-[1.45]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink-soft)" }}>
+        <p className="max-w-[640px] text-[22px] font-light leading-[1.45]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink-soft)" }}>
           The only job board built for Psychiatric Mental Health Nurse Practitioners. Five thousand verified roles, refreshed daily, with the salary up front.
         </p>
 
@@ -102,8 +102,8 @@ export default function PMHNPCase() {
           {[["5,000", "+", "Verified roles"], ["50", " ", "U.S. states"]].map(([n, s, l]) => (
             <div key={l as string}>
               <div className="flex items-baseline">
-                <span className="text-[64px] font-light leading-[1] tabular-nums" style={{ fontFamily: "'Fraunces',serif", color: "var(--accent)" }}>{n}</span>
-                <span className="text-[28px]" style={{ fontFamily: "'Fraunces',serif", color: "var(--accent)" }}>{(s as string).trim()}</span>
+                <span className="text-[64px] font-light leading-[1] tabular-nums" style={{ fontFamily: "'Playfair Display',serif", color: "var(--accent)" }}>{n}</span>
+                <span className="text-[28px]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--accent)" }}>{(s as string).trim()}</span>
               </div>
               <div className="mt-2 text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>{l}</div>
             </div>

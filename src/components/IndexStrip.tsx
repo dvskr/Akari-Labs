@@ -21,7 +21,7 @@ export default function IndexStrip() {
               style={{ borderColor: "var(--hairline)" }}
             >
               <span className="col-span-1 text-[11px] tabular-nums tracking-[0.16em]" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--faint)" }}>{row[0]}</span>
-              <span className="col-span-4 text-[28px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+              <span className="col-span-4 text-[28px] font-light" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>
                 {row[1]}
               </span>
               <span className="col-span-4 text-[14px]" style={{ fontFamily: "'Inter Tight','DM Sans',sans-serif", color: "var(--label)" }}>{row[2]}</span>

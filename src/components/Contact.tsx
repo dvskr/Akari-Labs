@@ -59,7 +59,7 @@ export default function Contact() {
             <h2 className="text-[12px] tracking-[0.24em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
               Contact
             </h2>
-            <p className="mt-6 text-[clamp(44px,5vw,80px)] font-light leading-[1.0]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+            <p className="mt-6 text-[clamp(44px,5vw,80px)] font-light leading-[1.0]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>
               Send a <span style={{ fontStyle: "italic" }}>letter</span><span style={{ color: "var(--accent)" }}>.</span>
             </p>
             <p className="mt-6 max-w-[400px] text-[16px] leading-[1.7]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
@@ -104,7 +104,7 @@ export default function Contact() {
               {state === "sent" ? (
                 <div className="flex min-h-[400px] flex-col items-center justify-center py-12 text-center">
                   <span className="text-[80px]" style={{ color: "var(--accent)" }}>✓</span>
-                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Sent.</p>
+                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>Sent.</p>
                   <p className="mt-2 text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>We&apos;ll write back within two business days.</p>
                   <button
                     onClick={resetForm}
@@ -117,7 +117,7 @@ export default function Contact() {
               ) : state === "error" ? (
                 <div className="flex min-h-[400px] flex-col items-center justify-center py-12 text-center">
                   <span className="text-[48px]">⚠️</span>
-                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Something went wrong.</p>
+                  <p className="mt-6 text-[28px] font-light" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>Something went wrong.</p>
                   <p className="mt-2 max-w-[400px] text-[14px]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>
                     {errorMessage || "We couldn\u0027t send your message. Please try again."}
                   </p>

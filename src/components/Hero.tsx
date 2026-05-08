@@ -50,7 +50,7 @@ export default function Hero() {
           <div className="w-full px-[clamp(20px,3vw,48px)] pt-20 pb-0">
             <h1
               className="text-[clamp(48px,10vw,180px)] leading-[0.85] tracking-[-0.035em]"
-              style={{ fontFamily: "'Fraunces','Shippori Mincho',serif", color: "var(--ink)", fontWeight: 300 }}
+              style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)", fontWeight: 300 }}
             >
               <span className="block">Software</span>
               <span className="block" style={{ paddingLeft: "clamp(20px,8vw,160px)" }}>
@@ -69,11 +69,11 @@ export default function Hero() {
             <div className="col-span-12 md:col-span-7 flex flex-col justify-center px-[clamp(20px,3vw,48px)] py-10 border-r" style={{ borderColor: "var(--hairline)" }}>
               <p
                 className="text-[clamp(16px,1.3vw,20px)] leading-[1.55] max-w-[640px]"
-                style={{ fontFamily: "'Fraunces',serif", color: "var(--ink-soft)", fontWeight: 400 }}
+                style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink-soft)", fontWeight: 400 }}
               >
                 <span
                   className="float-left mr-3 mt-1 leading-none"
-                  style={{ fontFamily: "'Fraunces',serif", color: "var(--accent)", fontSize: "clamp(56px,5vw,78px)", fontStyle: "italic", fontWeight: 400 }}
+                  style={{ fontFamily: "'Playfair Display',serif", color: "var(--accent)", fontSize: "clamp(56px,5vw,78px)", fontStyle: "italic", fontWeight: 400 }}
                   aria-hidden="true"
                 >
                   A
@@ -117,7 +117,7 @@ export default function Hero() {
                 ].map(([k, v]) => (
                   <div key={k} className="flex flex-col justify-center gap-1.5 p-5" style={{ background: "var(--tile)" }}>
                     <span className="text-[10px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>{k}</span>
-                    <span className="text-[15px]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>{v}</span>
+                    <span className="text-[15px]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>{v}</span>
                   </div>
                 ))}
               </div>

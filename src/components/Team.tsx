@@ -26,7 +26,7 @@ export default function Team() {
             <h2 className="text-[12px] tracking-[0.24em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
               Team
             </h2>
-            <p className="mt-4 text-[clamp(40px,5vw,72px)] font-light leading-[1.05]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+            <p className="mt-4 text-[clamp(40px,5vw,72px)] font-light leading-[1.05]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>
               Two people. <span style={{ fontStyle: "italic", color: "var(--label)" }}>By design.</span>
             </p>
           </div>
@@ -55,7 +55,7 @@ export default function Team() {
                 >
                   <span
                     className="absolute inset-0 flex items-center justify-center text-[140px] font-light"
-                    style={{ fontFamily: "'Fraunces',serif", color: "var(--ink-soft)", opacity: 0.95 }}
+                    style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink-soft)", opacity: 0.95 }}
                   >
                     {m.name[0]}
                   </span>
@@ -64,7 +64,7 @@ export default function Team() {
               </div>
 
               <div className="col-span-8">
-                <h3 className="text-[40px] font-light leading-[1]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>{m.name}</h3>
+                <h3 className="text-[40px] font-light leading-[1]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>{m.name}</h3>
                 <p className="mt-4 text-[15px] leading-[1.65]" style={{ fontFamily: "'Inter Tight',sans-serif", color: "var(--label)" }}>{m.bio}</p>
                 <p className="mt-4 text-[11px] tracking-[0.14em]" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>{m.stack}</p>
                 {m.links.length > 0 && (

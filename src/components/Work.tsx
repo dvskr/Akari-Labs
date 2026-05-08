@@ -11,7 +11,7 @@ export default function Work() {
             <h2 className="text-[12px] tracking-[0.24em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>
               Work
             </h2>
-            <p className="mt-4 text-[clamp(40px,5vw,72px)] font-light leading-[1.05]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+            <p className="mt-4 text-[clamp(40px,5vw,72px)] font-light leading-[1.05]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>
               Two products. <span style={{ fontStyle: "italic", color: "var(--label)" }}>Both narrow on purpose.</span>
             </p>
           </div>

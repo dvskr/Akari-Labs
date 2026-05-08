@@ -18,7 +18,7 @@ function PhoneMock() {
         </div>
         <div className="mt-3">
           <div className="text-[10px] tracking-[0.22em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--sub)" }}>Push · day 24</div>
-          <div className="mt-1 text-[26px] font-light leading-tight" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Bench Press</div>
+          <div className="mt-1 text-[26px] font-light leading-tight" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>Bench Press</div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--accent)" }}>+ 2.5 lb · PR</span>
           </div>
@@ -64,7 +64,7 @@ export default function GymTrackerCase() {
           <div className="mt-1 flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'JetBrains Mono',monospace", color: "var(--accent)" }}>
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--accent)" }} /> Beta soon
           </div>
-          <h3 className="mt-6 text-[40px] font-light leading-[1.0]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>Gym<br/>Tracker</h3>
+          <h3 className="mt-6 text-[40px] font-light leading-[1.0]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>Gym<br/>Tracker</h3>
           <dl className="mt-6 space-y-3 text-[12px]" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
             {[["Sector", "Fitness"], ["Platform", "iOS · Android"], ["Launching", "Q2 2026"], ["Pricing", "Free · $5.99/mo"]].map(([k, v]) => (
               <div key={k} className="flex items-baseline justify-between border-b pb-2" style={{ borderColor: "var(--hairline)" }}>
@@ -77,7 +77,7 @@ export default function GymTrackerCase() {
       </aside>
 
       <div className="col-span-12 md:col-span-9 md:order-1">
-        <p className="max-w-[640px] text-[22px] font-light leading-[1.45]" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink-soft)" }}>
+        <p className="max-w-[640px] text-[22px] font-light leading-[1.45]" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink-soft)" }}>
           Workout tracking that learns you. One-tap logging, PR detection, and progressive-overload guidance — streamlined for serious lifters.
         </p>
 

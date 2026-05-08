@@ -45,10 +45,10 @@
 
 @theme inline {
   /* Fonts */
-  --font-heading: "Fraunces", "Shippori Mincho", serif;
+  --font-heading: "Playfair Display", serif;
   --font-body: "Inter Tight", "DM Sans", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-kanji: "Shippori Mincho", "Noto Serif JP", serif;
+  --font-kanji: "Playfair Display", serif;
 }
 
 /* Base */

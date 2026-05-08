@@ -57,7 +57,7 @@ export default function Navigation() {
         >
           <span
             className="text-[26px] leading-none transition-colors"
-            style={{ fontFamily: "'Fraunces',serif", color: "var(--accent)", fontWeight: 600, fontStyle: "italic" }}
+            style={{ fontFamily: "'Playfair Display',serif", color: "var(--accent)", fontWeight: 600, fontStyle: "italic" }}
           >
             A
           </span>

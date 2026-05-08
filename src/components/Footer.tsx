@@ -36,7 +36,7 @@ export default function Footer() {
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-12 md:col-span-5">
             <div className="flex items-baseline gap-3">
-              <span className="text-[24px] font-light" style={{ fontFamily: "'Fraunces',serif", color: "var(--ink)" }}>
+              <span className="text-[24px] font-light" style={{ fontFamily: "'Playfair Display',serif", color: "var(--ink)" }}>
                 Akari <span style={{ color: "var(--sub)", fontStyle: "italic" }}>Labs</span>
               </span>
             </div>
