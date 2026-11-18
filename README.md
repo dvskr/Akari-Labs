@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# akarilabs.io
 
-## Getting Started
+The site of Akari Labs: one page that shows every product we build and run, from the job boards and the
+job search inside ChatGPT and Claude to Tetsu, the workout app.
 
-First, run the development server:
+## How the page is put together
+
+- `src/app/page.tsx` renders the page's markup (`src/app/akari-markup.ts`) on the server.
+- `src/app/akari.css` is its stylesheet; `src/app/globals.css` is the small base under it.
+- `public/akari/site.js` runs after hydration: the ring of clay islands, the rope control, the boards trail,
+  the chat demo, the phones and the contact form.
+- `public/assets/` holds the pictures: the islands (`n-*` and their light layers `e-*`), the board
+  screenshots, the rope and beads, clouds and textures.
+- `src/app/api/contact/route.ts` checks a note from the form and saves it to the Supabase table `messages`
+  (`supabase/migrations/001_create_messages.sql`), with a Discord notification when `DISCORD_WEBHOOK` is set.
+
+## Environment
+
+See `.env.example`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and optionally
+`SUPABASE_SERVICE_ROLE_KEY` and `DISCORD_WEBHOOK`. Never commit real values.
+
+## Run it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#151A27"/>
-  <text x="32" y="48" text-anchor="middle" font-family="'Georgia', serif" font-weight="700" font-size="44" font-style="italic" fill="#D4A843">A</text>
+  <defs>
+    <mask id="ring-gap"><rect width="32" height="32" fill="#fff"/><path d="M2.4 16a13.6 3.7 0 0 0 27.2 0" fill="none" stroke="#000" stroke-width="4.4" transform="rotate(-20 16 16)"/></mask>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0E2019"/>
+  <g transform="translate(4 4) scale(1.75)" color="#EEF1E6">
+    <circle cx="16" cy="16" r="7" fill="currentColor" mask="url(#ring-gap)"/>
+    <g transform="rotate(-20 16 16)">
+      <ellipse cx="16" cy="16" rx="13.6" ry="3.7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="27.2" cy="18.3" r="2.5" fill="#D9552F"/>
+    </g>
+  </g>
 </svg>

@@ -1,35 +1,34 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./akari.css";
+
+const DESCRIPTION =
+  "Akari Labs builds and runs focused products: job boards for one healthcare profession at a time, job search inside ChatGPT and Claude, and Tetsu, a workout app.";
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#07130F",
+  colorScheme: "dark",
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
-  title: "Akari Labs — Software that lights the way",
-  description:
-    "Akari Labs builds focused SaaS products for healthcare recruiting and fitness tracking. Home of PMHNP Hiring (5,000+ psychiatric NP jobs) and Gym Tracker.",
+  title: "Akari Labs",
+  description: DESCRIPTION,
   metadataBase: new URL("https://akarilabs.io"),
   openGraph: {
-    title: "Akari Labs — Software that lights the way.",
-    description:
-      "Akari Labs builds focused SaaS products for healthcare recruiting and fitness tracking. Home of PMHNP Hiring (5,000+ psychiatric NP jobs) and Gym Tracker.",
+    title: "Akari Labs: we build and run focused products",
+    description: DESCRIPTION,
     url: "https://akarilabs.io",
     siteName: "Akari Labs",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Akari Labs: a ring of clay islands, one for each product" }],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Akari Labs — Software that lights the way.",
-    description:
-      "Akari Labs builds focused SaaS products for healthcare recruiting and fitness tracking.",
+    title: "Akari Labs: we build and run focused products",
+    description: DESCRIPTION,
     images: ["/og-image.jpg"],
-  },
-  icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
   alternates: {
     canonical: "https://akarilabs.io",
@@ -42,16 +41,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* The root layout wraps every page, so these faces load everywhere; the rule is about the old pages router. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Instrument+Serif:ital@1&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
