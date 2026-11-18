@@ -343,11 +343,11 @@
       cv.style.height = `${Hb}px`;
     }
     const ox = scene.offsetLeft, oy = scene.offsetTop;
-    // the clay control sits under the bottom cloud bank, centred under the ring, the rope's middle a little below the bank's
+    // the clay control sits under the bottom cloud bank, centred under the ring, the rope's middle below the bank's
     // centre, and the hero grows to hold it
     const bank = clouds.find((c) => c.layer === 'fg');
     const dialW = dial.offsetWidth;
-    const dTop = cy + bank.y * f + 0.1 * bank.hpx + 0.025 * dialW - ROPE.mid * dialW / ROPE.w;
+    const dTop = cy + bank.y * f + 0.1 * bank.hpx + 0.075 * dialW - ROPE.mid * dialW / ROPE.w;
     const dialH = placeDial(oy + dTop, ox);
     if (wide) {
       stage.style.paddingBottom = `${Math.max(44, Math.ceil(low + 30 - Hb), Math.ceil(dTop + dialH + 24 - Hb))}px`;
@@ -1421,7 +1421,7 @@
   const $$ = (s, el = page) => Array.from(el.querySelectorAll(s));
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   let still = motionQuery.matches;
-  motionQuery.addEventListener('change', (e) => { still = e.matches; kick(); });
+  motionQuery.addEventListener('change', (e) => { still = e.matches; });
   page.classList.add('ak-js');
 
   // ---------- links inside the page scroll to their section and move focus there ----------
@@ -1448,7 +1448,6 @@
       en.target.classList.toggle('is-on', en.isIntersecting);
       if (en.isIntersecting) onScreen.add(en.target); else onScreen.delete(en.target);
     }
-    kick();
     gymAuto();
   }, { rootMargin: '80px 0px' });
   $$('.ak-s').forEach((s) => sectionIO.observe(s));
@@ -1457,94 +1456,9 @@
   }, { threshold: 0.16, rootMargin: '0px 0px -6% 0px' });
   $$('[data-in]').forEach((el) => inIO.observe(el));
 
-  // one small frame loop shared by the sections, running only while one of them is on screen
-  const anims = [];
-  let raf = 0, lastT = 0;
-  function kick() { if (!raf && !still && anims.some((a) => a.active())) raf = requestAnimationFrame(tick); }
-  function tick(t) {
-    raf = 0;
-    const dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 1 / 60;
-    lastT = t;
-    let any = false;
-    for (const a of anims) if (a.active()) { a.step(dt); any = true; }
-    if (any && !still) raf = requestAnimationFrame(tick); else lastT = 0;
-  }
-
-  // ---------- paths with travelling lights (the job boards trail, and the ways in "How we work") ----------
-  function makePath(box, opts) {
-    const svg = $('svg', box);
-    const paths = $$('path', svg);
-    const lights = $$('.ak-light', box);
-    const state = { samples: [], len: 0, t: lights.map((_, k) => k / lights.length), box };
-    function centreOf(el, fy) {
-      let x = 0, y = 0, n = el;
-      while (n && n !== box) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-      return { x: x + el.offsetWidth / 2, y: y + el.offsetHeight * fy, top: y, bottom: y + el.offsetHeight };
-    }
-    function build() {
-      const w = box.clientWidth, h = box.clientHeight;
-      if (!w || !h) return;
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      const d = opts.d(centreOf, w, h);
-      for (const p of paths) p.setAttribute('d', d);
-      const p = paths[0];
-      state.len = p.getTotalLength();
-      state.samples = [];
-      const n = Math.max(40, Math.round(state.len / 8));
-      for (let k = 0; k <= n; k++) { const pt = p.getPointAtLength((k / n) * state.len); state.samples.push([pt.x, pt.y]); }
-      place();
-    }
-    function place() {
-      const s = state.samples;
-      if (!s.length) return;
-      lights.forEach((el, k) => {
-        const u = state.t[k] % 1;
-        const f = u * (s.length - 1), i = Math.floor(f), a = f - i;
-        const p0 = s[i], p1 = s[Math.min(s.length - 1, i + 1)];
-        const x = p0[0] + (p1[0] - p0[0]) * a, y = p0[1] + (p1[1] - p0[1]) * a;
-        const fade = Math.min(1, u / 0.06, (1 - u) / 0.06);
-        el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
-        el.style.opacity = String(still ? 0.9 : fade);
-      });
-    }
-    new ResizeObserver(build).observe(box);
-    anims.push({
-      active: () => onScreen.has(box.closest('.ak-s')),
-      step: (dt) => {
-        if (!state.len) return;
-        for (let k = 0; k < state.t.length; k++) state.t[k] = (state.t[k] + (dt * opts.speed) / state.len) % 1;
-        place();
-      },
-    });
-    return { build, place };
-  }
-
-  // the job boards: a garden path that comes down past each island, crossing over in the gaps between them
+  // ---------- the job boards: the screenshots lean toward the pointer ----------
   const trail = $('#ak-trail');
   if (trail) {
-    const isles = $$('.ak-stn-isle .ak-isle', trail);
-    const stations = $$('.ak-stn', trail);
-    const tr = makePath(trail, {
-      speed: 64,
-      d: (centreOf) => {
-        const pts = isles.map((el, k) => ({ ...centreOf(el, 0.56), st: centreOf(stations[k], 0.5) }));
-        if (!pts.length) return '';
-        const r = 46;
-        let d = `M${pts[0].x.toFixed(1)},${(pts[0].y - 170).toFixed(1)} L${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-        for (let k = 1; k < pts.length; k++) {
-          const a = pts[k - 1], b = pts[k];
-          if (Math.abs(a.x - b.x) < 40) { d += ` L${b.x.toFixed(1)},${b.y.toFixed(1)}`; continue; }
-          const ym = (a.st.bottom + b.st.top) / 2;
-          const dir = b.x > a.x ? 1 : -1;
-          d += ` L${a.x.toFixed(1)},${(ym - r).toFixed(1)} Q${a.x.toFixed(1)},${ym.toFixed(1)} ${(a.x + dir * r).toFixed(1)},${ym.toFixed(1)}`;
-          d += ` L${(b.x - dir * r).toFixed(1)},${ym.toFixed(1)} Q${b.x.toFixed(1)},${ym.toFixed(1)} ${b.x.toFixed(1)},${(ym + r).toFixed(1)} L${b.x.toFixed(1)},${b.y.toFixed(1)}`;
-        }
-        const last = pts[pts.length - 1];
-        d += ` L${last.x.toFixed(1)},${(last.y + 150).toFixed(1)}`;
-        return d;
-      },
-    });
-    // the screenshots lean toward the pointer
     for (const fr of $$('.ak-browser', trail)) {
       fr.addEventListener('pointermove', (e) => {
         if (e.pointerType !== 'mouse' || still) return;
@@ -1554,35 +1468,6 @@
       });
       fr.addEventListener('pointerleave', () => { fr.style.transform = ''; });
     }
-    void tr;
-  }
-
-  // How we work: a soft wave through the four islets (a straight drop when they stack)
-  const ways = $('#ak-ways');
-  if (ways) {
-    const wIsles = $$('.ak-way-isle .ak-isle', ways);
-    makePath(ways, {
-      speed: 52,
-      d: (centreOf) => {
-        const pts = wIsles.map((el) => centreOf(el, 0.55));
-        if (pts.length < 2) return '';
-        let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-        for (let k = 1; k < pts.length; k++) {
-          const a = pts[k - 1], b = pts[k];
-          // a new row of a wrapped grid starts its own path rather than crossing the text above it
-          if (Math.abs(a.y - b.y) > 60 && Math.abs(a.x - b.x) > 40) { d += ` M${b.x.toFixed(1)},${b.y.toFixed(1)}`; continue; }
-          if (Math.abs(a.y - b.y) > 60) {
-            const my = (a.y + b.y) / 2;
-            d += ` C${a.x.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
-          } else {
-            const mx = (a.x + b.x) / 2;
-            const sag = Math.max(a.y, b.y) + 54;
-            d += ` C${mx.toFixed(1)},${sag.toFixed(1)} ${mx.toFixed(1)},${sag.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
-          }
-        }
-        return d;
-      },
-    });
   }
 
   // ---------- the chat: the question types itself, then the cards come back from the board ----------

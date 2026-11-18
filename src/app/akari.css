@@ -246,7 +246,6 @@ body { margin: 0; background: #06100C; }
   --accent: #EBC77F; --focus: #FF9466;
   --btn: #EEF1E6; --btn-hover: #FFFFFF; --btn-ink: #0B1510;
   --shadow: rgba(0, 0, 0, .6);
-  --path: rgba(255, 210, 132, .92); --path-glow: rgba(255, 190, 100, .15);
   --glow: rgba(214, 160, 70, .34); --glow-op: 1; --light-op: 1;
   --bar: #172A21; --bar-ink: #CAD3C0; --chat: #0F1D17; --chat-you: #1A2E25;
   --foot: #06100C; --foot-ink: #EEF1E6; --foot-ink-2: #A9B5A0;
@@ -347,10 +346,6 @@ body { margin: 0; background: #06100C; }
 
 /* ===== job boards: a path the visitor walks down ===== */
 .ak .ak-trail { position: relative; margin-top: 72px; }
-.ak .ak-trail-svg, .ak .ak-ways-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; z-index: 0; pointer-events: none; }
-.ak .ak-trail-dots { fill: none; stroke: var(--path); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 11; transition: stroke .8s ease; }
-.ak .ak-trail-glow { fill: none; stroke: var(--path-glow); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; transition: stroke .8s ease; }
-.ak .ak-light { position: absolute; left: 0; top: 0; z-index: 1; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(255, 250, 236, 1), rgba(255, 210, 140, .62) 34%, rgba(255, 180, 90, 0)); opacity: 0; will-change: transform, opacity; }
 .ak .ak-chapter { position: relative; z-index: 2; display: flex; justify-content: center; margin: 0 0 40px; }
 .ak .ak-chapter span { padding: 9px 18px; border-radius: 999px; background: var(--card); box-shadow: 0 0 0 1px var(--card-line), 0 10px 24px -16px var(--shadow); font-size: 12.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-2); }
 .ak .ak-chapter--two { margin-top: 24px; }
