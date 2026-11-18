@@ -75,8 +75,10 @@ export async function POST(request: Request) {
     return fail("Your message could not be sent. Please try again in a minute.", 500);
   }
 
-  // The webhook URL stays on the server. Mentions are switched off, so a note cannot ping anyone.
-  const webhookUrl = process.env.DISCORD_WEBHOOK;
+  // The webhook URL stays on the server: only this route reads it, under either name the project has
+  // used (DISCORD_WEBHOOK is the right one: a NEXT_PUBLIC_ name must never be read by browser code).
+  // Mentions are switched off, so a note cannot ping anyone.
+  const webhookUrl = process.env.DISCORD_WEBHOOK ?? process.env.NEXT_PUBLIC_DISCORD_WEBHOOK;
   if (webhookUrl) {
     try {
       await fetch(webhookUrl, {
